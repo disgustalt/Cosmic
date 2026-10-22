@@ -1,0 +1,34 @@
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: fout 0.15s ease-out both;
+}
+
+::view-transition-new(root) {
+  animation: fin 0.2s ease-in both;
+}
+
+@keyframes fout {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fin {
+  from {
+    opacity: 0;
+  }
+}
+
+html {
+  background: rgb(20, 20, 20);
+}
+
+body {
+  background: radial-gradient(ellipse 120% 100% at 50% 0%, #172B4D 0%, #0B1428 45%, #070B18 100%);
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  margin: 0;
+}
