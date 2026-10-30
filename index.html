@@ -1,8 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="all.css">
+
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Asap+Sharp:ital,wght@0,100..900;1,100..900&family=Orbitron:wght@400..900&display=swap');
       @import url('https://fonts.googleapis.com/css2?family=Redaction:ital,wght@0,400;0,700;1,400&display=swap');
@@ -11,57 +14,163 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        overflow-x: hidden;
       }
 
       .hero {
         position: relative;
-        min-height: 650px;
         isolation: isolate;
+        min-height: 700px;
         width: 100%;
         flex-shrink: 0;
-        top: 0;
+        overflow: hidden;
       }
 
       .hero::before {
         content: "";
+        position: absolute;
+        inset: -2%;
+        z-index: -2;
+        pointer-events: none;
+        background-image: var(--apodimg);
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          black 0%,
+          black 35%,
+          rgba(0, 0, 0, 0.8) 55%,
+          transparent 100%
+        );
+        mask-image: linear-gradient(
+          to bottom,
+          black 0%,
+          black 35%,
+          rgba(0, 0, 0, 0.8) 55%,
+          transparent 100%
+        );
+        animation: imgm 35s ease-in-out infinite alternate;
+      }
+
+      .hero::after {
+        content: "";
         position: absolute;
         inset: 0;
-        pointer-events: none;
-        background-image: var(--apodimg);
-        -webkit-mask-image: linear-gradient(to bottom, black 0%, black 40%, transparent 100%);
-        mask-image: linear-gradient(to bottom, black 0%, black 40%, transparent 100%);
         z-index: -1;
+        pointer-events: none;
+        opacity: 0.35;
+        background-image:
+          radial-gradient(1px 1px at 10% 20%, white 99%, transparent),
+          radial-gradient(1.5px 1.5px at 75% 15%, #a0bef2 99%, transparent),
+          radial-gradient(1px 1px at 88% 45%, white 99%, transparent),
+          radial-gradient(2px 2px at 32% 38%, #a0bef2 99%, transparent),
+          radial-gradient(1px 1px at 60% 65%, white 99%, transparent),
+          radial-gradient(1px 1px at 45% 12%, white 99%, transparent);
+        background-size: 250px 220px;
+        animation: starsDrift 65s linear infinite;
       }
 
       .hero .content {
         position: relative;
         z-index: 2;
-        flex-direction: column;
         min-height: 700px;
+        padding: 40px 20px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        text-shadow: 0 0 4px rgba(255, 255, 255, 0.15);
+        text-align: center;
+        animation: capp 1.2s ease both;
       }
 
       .hero .content h1 {
+        margin: 0;
         font-family: "Orbitron", sans-serif;
-        font-weight: 550;
+        font-weight: 600;
         color: #a0bef2;
-        font-size: 80px;
-        margin-bottom: 10px;
+        font-size: clamp(55px, 10vw, 100px);
+        letter-spacing: -4px;
+        line-height: 1.2;
+        text-shadow:
+          0 0 15px rgba(160, 190, 242, 0.25),
+          0 0 45px rgba(100, 150, 255, 0.2);
+        animation: tgl 5s ease-in-out infinite alternate;
       }
 
       .hero .content p {
+        margin-top: 18px;
         font-family: "Redaction", sans-serif;
         font-weight: 350;
-        color: rgba(160, 190, 242, 0.6);
-        font-size: 35px;
+        color: rgba(160, 190, 242, 0.7);
+        font-size: clamp(22px, 3.5vw, 35px);
+        letter-spacing: 1px;
+        text-shadow: 0 0 20px rgba(160, 190, 242, 0.15);
+      }
+
+      @keyframes imgm {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.07);
+        }
+      }
+
+      @keyframes starsDrift {
+        from {
+          background-position: 0 0;
+        }
+        to {
+          background-position: 250px 220px;
+        }
+      }
+
+      @keyframes capp {
+        from {
+          opacity: 0;
+          transform: translateY(25px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes tgl {
+        from {
+          text-shadow:
+            0 0 15px rgba(160, 190, 242, 0.2),
+            0 0 35px rgba(100, 150, 255, 0.12);
+        }
+        to {
+          text-shadow:
+            0 0 22px rgba(160, 190, 242, 0.4),
+            0 0 55px rgba(100, 150, 255, 0.25);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .hero,
+        .hero .content {
+          min-height: 650px;
+        }
+
+        .hero .content h1 {
+          letter-spacing: -2px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hero::before,
+        .hero::after,
+        .hero .content,
+        .hero .content h1 {
+          animation: none;
+        }
       }
     </style>
+
     <script>
       const d = {
         apod: {
@@ -69,7 +178,7 @@
           desc: null,
           title: null
         }
-      }
+      };
 
       async function apod() {
         try {
@@ -82,15 +191,17 @@
 
           const dat = await res.json();
           console.log(dat);
-          
+
+          const item = Array.isArray(dat) ? dat[0] : dat;
+
           d.apod = {
-            title: dat[0].title,
-            img: dat[0].hdurl || dat[0].url,
-            desc: dat[0].explanation
-          }
+            title: item.title,
+            img: item.hdurl || item.url,
+            desc: item.explanation
+          };
         } catch (e) {
           console.log(e);
-          alert("Something wemt wrong!");
+          alert("Something went wrong!");
         }
       }
 
@@ -98,7 +209,8 @@
 
       document.addEventListener("DOMContentLoaded", async () => {
         await apodl;
-        document.querySelector(".hero").style.setProperty("--apodimg", `url(${d.apod.img})`);
+
+        if (d.apod.img) document.querySelector(".hero").style.setProperty("--apodimg", `url("${d.apod.img}")`);
       });
     </script>
   </head>
