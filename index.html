@@ -55,10 +55,10 @@
           const dat = await res.json();
           console.log(dat);
           
-          d[0].apod = {
-            title: dat.title,
-            img: dat.hdurl || dat.url,
-            desc: dat.explanation
+          d.apod = {
+            title: dat[0].title,
+            img: dat[0].hdurl || dat[0].url,
+            desc: dat[0].explanation
           }
         } catch (e) {
           console.log(e);
