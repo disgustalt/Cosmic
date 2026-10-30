@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Home</title>
+    <link rel="stylesheet" href="all.css">
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero {
+        position: relative;
+        min-height: 650px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(to bottom, transparent 20%, rgba(15, 10, 25, 0.5) 60%, #080412 100%);
+      }
+
+      .hero .content {
+        position: relative;
+        z-index: 1;
+      }
+    </style>
+    <script>
+      const d = {
+        apod: {
+          img: null,
+          desc: null,
+          title: null
+        }
+      }
+
+      async function apod() {
+        try {
+          const res = await fetch("https://science.nasa.gov/wp-json/wp/v2/apod-basic");
+
+          if (!res.ok) {
+            alert("We couldn't get the info we need :(");
+            return;
+          }
+
+          const dat = await res.json();
+          
+          d.apod = {
+            title: dat.title,
+            img: dat.hdurl || dat.url,
+            desc: dat.explanation
+          }
+        } catch (e) {
+          console.log(e);
+          alert("Something wemt wrong!");
+        }
+      }
+
+      const apodl = apod();
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        await apodl;
+        document.querySelector(".hero").style.backgroundImage = `url(${d.apod.img})`;
+      });
+    </script>
+  </head>
+  <body>
+    <div class="hero">
+      <div class="content">
+        trst
+      </div>
+    </div>
+  </body>
+</html>
