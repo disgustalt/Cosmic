@@ -55,7 +55,7 @@
           const dat = await res.json();
           console.log(dat);
           
-          d.apod = {
+          d[0].apod = {
             title: dat.title,
             img: dat.hdurl || dat.url,
             desc: dat.explanation
