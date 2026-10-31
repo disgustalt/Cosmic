@@ -1,0 +1,358 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="all.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Asap+Sharp:ital,wght@0,100..900;1,100..900&family=Orbitron:wght@400..900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Redaction:ital,wght@0,400;0,700;1,400&display=swap');
+
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-x: hidden;
+      }
+
+      .hero {
+        position: relative;
+        isolation: isolate;
+        min-height: 350px;
+        width: 100%;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: -2%;
+        z-index: -2;
+        pointer-events: none;
+        background-image: var(--apodimg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          black 0%,
+          black 35%,
+          rgba(0, 0, 0, 0.8) 55%,
+          transparent 100%
+        );
+        mask-image: linear-gradient(
+          to bottom,
+          black 0%,
+          black 35%,
+          rgba(0, 0, 0, 0.8) 55%,
+          transparent 100%
+        );
+        animation: imgm 35s ease-in-out infinite alternate;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0.35;
+        background-image:
+          radial-gradient(1px 1px at 10% 20%, white 99%, transparent),
+          radial-gradient(1.5px 1.5px at 75% 15%, #a0bef2 99%, transparent),
+          radial-gradient(1px 1px at 88% 45%, white 99%, transparent),
+          radial-gradient(2px 2px at 32% 38%, #a0bef2 99%, transparent),
+          radial-gradient(1px 1px at 60% 65%, white 99%, transparent),
+          radial-gradient(1px 1px at 45% 12%, white 99%, transparent);
+        background-size: 250px 220px;
+        animation: starm 15s linear infinite;
+      }
+
+      .hero .content {
+        position: relative;
+        z-index: 2;
+        min-height: 350px;
+        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        animation: capp 1.2s ease both;
+      }
+
+      .hero .content h1 {
+        margin: 0;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 550;
+        color: #a0bef2;
+        font-size: clamp(25px, 10vw, 50px);
+        letter-spacing: -4px;
+        line-height: 1.2;
+        text-shadow:
+          0 0 15px rgba(160, 190, 242, 0.25),
+          0 0 45px rgba(100, 150, 255, 0.2);
+        animation: tgl 5s ease-in-out infinite alternate;
+      }
+
+      .hero .content p {
+        margin-top: 18px;
+        font-family: "Redaction", sans-serif;
+        font-weight: 350;
+        color: rgba(160, 190, 242, 0.7);
+        font-size: clamp(15px, 3.5vw, 30px);
+        letter-spacing: 1px;
+        text-shadow: 0 0 20px rgba(160, 190, 242, 0.15);
+      }
+
+      .downarrowmain {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 150px;
+        margin-bottom: 250px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        opacity: 0.5;
+        border: 1px solid rgba(180, 220, 255, 0.8);
+      }
+
+      section {
+        width: 100%;
+        padding: 40px 25px;
+        box-sizing: border-box;
+      }
+
+      .card {
+        width: 100%;
+        position: relative;
+        isolation: isolate;
+        max-width: 900px;
+        min-height: 300px;
+        margin: 0 auto;
+        padding: 30px;
+        box-sizing: border-box;
+        color: #e8eff0;
+        background-size: cover;
+        border-radius: 25px;
+        overflow: hidden;
+        background-position: center;
+        transition: border-color 0.5s, box-shadow 0.7s, transform 0.4s;
+      }
+      
+      .card.weather {
+        background: linear-gradient(90deg, rgba(5, 15, 30, 0.9) 0%, rgba(5, 15, 30, 0.7) 50%, rgba(5, 15, 30, 0.3) 100%), url("/images/home/weather.webp");
+        border: 1.5px solid rgba(160, 190, 240, 0.3);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(100, 150, 255, .1), inset 0 0 40px rgba(100, 150, 255, 0.08);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card.weather:hover {
+        border-color: rgba(160, 190, 240, 0.5);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5),  0 0 35px rgba(100, 150, 255, 0.3), inset 0 0 50px rgba(100, 150, 255, 0.15);
+      }
+
+      .card h2 {
+        margin: 0 0 25px;
+        font-size: 25px;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+        font-weight: 500;
+      }
+
+      .card.weather h2 {
+        color: #bfcfff;
+        text-shadow: 0 0 20px rgba(160, 190, 255, 0.5);
+      }
+
+      .card p {
+        max-width: 600px;
+        margin: 0;
+        font-family: 'Asap Sharp', sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      .card.weather p {
+        color: rgba(230, 240, 250, 0.9);
+        text-shadow: 0 2px 10px rgba(0, 0, 0, .8);
+      }
+
+      .card a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-family: "Redaction", sans-serif;
+        text-decoration: none;
+        position: absolute;
+        touch-action: none;
+        width: 30%;
+        bottom: 30px;
+        height: 40px;
+        font-size: 15px;
+        border-radius: 25px;
+      }
+
+      .card.weather a {
+        background: rgba(220, 230, 255, 0.9);
+        color: rgba(0, 0, 60, 0.9);
+      }
+
+      .lucide-arrow-down {
+        color: rgba(200, 240, 255, 0.8);
+        stroke-width: 1.2;
+        width: 30px;
+        height: 30px;
+      }
+
+      @keyframes imgm {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.07);
+        }
+      }
+
+      @keyframes starm {
+        from {
+          background-position: 0 0;
+        }
+        to {
+          background-position: 250px 220px;
+        }
+      }
+
+      @keyframes capp {
+        from {
+          opacity: 0;
+          transform: translateY(25px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes tgl {
+        from {
+          text-shadow:
+            0 0 15px rgba(160, 190, 242, 0.2),
+            0 0 35px rgba(100, 150, 255, 0.12);
+        }
+        to {
+          text-shadow:
+            0 0 22px rgba(160, 190, 242, 0.4),
+            0 0 55px rgba(100, 150, 255, 0.25);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .hero,
+        .hero .content {
+          min-height: 350px;
+        }
+
+        .hero .content h1 {
+          letter-spacing: -2px;
+        }
+
+        section {
+          padding: 25px 15px;
+        }
+
+        .card {
+          padding: 25px;
+          min-height: 30ppx;
+        }
+
+        .card h2 {
+          font-size: 20px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hero::before,
+        .hero::after,
+        .hero .content,
+        .hero .content h1 {
+          animation: none;
+        }
+      }
+    </style>
+
+    <script>
+      const d = {
+        apod: {
+          img: null,
+          desc: null,
+          title: null
+        }
+      };
+
+      async function apod() {
+        try {
+          const res = await fetch("https://science.nasa.gov/wp-json/wp/v2/apod-basic");
+
+          if (!res.ok) {
+            alert("We couldn't get the info we need :(");
+            return;
+          }
+
+          const dat = await res.json();
+          console.log(dat);
+
+          const item = Array.isArray(dat) ? dat[0] : dat;
+
+          d.apod = {
+            title: item.title,
+            img: item.hdurl || item.url,
+            desc: item.explanation
+          };
+        } catch (e) {
+          console.log(e);
+          alert("Something went wrong!");
+        }
+      }
+
+      const apodl = apod();
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        await apodl;
+
+        if (d.apod.img) document.querySelector(".hero").style.setProperty("--apodimg", `url("${d.apod.img}")`);
+      });
+    </script>
+  </head>
+  <body>
+    <div class="hero">
+      <div class="content">
+        <h1>Cosmic</h1>
+        <p>See what's going on around you</p>
+      </div>
+    </div>
+    <div class="downarrowmain">
+      <i data-lucide="arrow-down"></i>
+    </div>
+    <main>
+      <section id="weather">
+        <div class="card weather">
+          <h2>Weather</h2>
+          <p>See what's happening with the weather in outer space! It's pretty cool :D</p>
+          <a href="/weather">Let's Go!</a>
+        </div>
+      </section>
+    </main>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>
