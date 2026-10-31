@@ -1,561 +1,358 @@
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/all.css">
-  <title>Weather</title>
+  <head>
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="all.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Asap+Sharp:ital,wght@0,100..900;1,100..900&family=Orbitron:wght@400..900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Redaction:ital,wght@0,400;0,700;1,400&display=swap');
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Asap+Sharp:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
-
-    * {
-      box-sizing: border-box;
-    }
-
-    @property --glow {
-      syntax: "<color>";
-      inherits: true;
-      initial-value: #253c5c;
-    }
-
-    body {
-      --glow: #253c5c;
-      margin: 0;
-      min-height: 100vh;
-      color: #e0e7f1;
-      background: #101722;
-      font-family: "DM Sans", sans-serif;
-      overflow-x: hidden;
-      transition: --glow 2s ease;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      z-index: -1;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse 75% 45% at 50% -10%, var(--glow), transparent 75%),
-        radial-gradient(ellipse 40% 35% at 0% 100%, #24384b66, transparent 80%);
-      opacity: .8;
-      animation: bgm 20s ease-in-out infinite alternate;
-    }
-
-    @keyframes bgm {
-      from { transform: scale(1); }
-      to { transform: scale(1.08) translateY(1%); }
-    }
-
-    main {
-      width: min(100% - 40px, 880px);
-      margin: auto;
-      padding-bottom: 60px;
-    }
-
-    .aurora {
-      position: relative;
-      height: 210px;
-      margin: 0 -20px -35px;
-      overflow: hidden;
-      pointer-events: none;
-      mask-image: linear-gradient(to bottom, black 15%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, black 15%, transparent 100%);
-    }
-
-    .aurora span {
-      position: absolute;
-      top: -115px;
-      width: 65%;
-      height: 250px;
-      border-radius: 50%;
-      filter: blur(55px);
-      opacity: .2;
-      animation: aur 18s ease-in-out infinite alternate;
-    }
-
-    .aurora span:nth-child(1) {
-      left: -15%;
-      background: #62bba7;
-    }
-
-    .aurora span:nth-child(2) {
-      left: 25%;
-      background: #718acb;
-      animation-delay: -6s;
-    }
-
-    .aurora span:nth-child(3) {
-      right: -20%;
-      background: #8d79bd;
-      animation-delay: -11s;
-    }
-
-    @keyframes aur {
-      from { transform: translate(0, 0) scaleX(.8) rotate(-10deg); }
-      to { transform: translate(30px, 35px) scaleX(1.2) rotate(12deg); }
-    }
-
-    .heading {
-      text-align: center;
-      padding: 12px 0 42px;
-    }
-
-    .heading h1 {
-      margin: 0;
-      font-family: "Asap Sharp", sans-serif;
-      font-size: clamp(36px, 7vw, 54px);
-      font-weight: 500;
-      letter-spacing: -1.5px;
-      color: #e1eaf5;
-    }
-
-    .heading p {
-      margin: 10px 0 0;
-      font-size: 15px;
-      color: #a3b1c3;
-    }
-
-    .weather-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .weather-card {
-      min-width: 0;
-      padding: 23px;
-      border: 1px solid #ffffff12;
-      border-radius: 15px;
-      background: #1b2635b8;
-      box-shadow: 0 8px 28px #00000012;
-      animation: appear .7s ease both;
-    }
-
-    .weather-card:nth-child(2) { animation-delay: .08s; }
-    .weather-card:nth-child(3) { animation-delay: .16s; }
-    .weather-card:nth-child(4) { animation-delay: .24s; }
-
-    @keyframes appear {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .weather-card h2 {
-      margin: 0 0 22px;
-      color: #aebdd0;
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .value {
-      min-height: 46px;
-      color: #edf3fa;
-      font-size: clamp(29px, 5vw, 39px);
-      font-weight: 500;
-      letter-spacing: -1px;
-      overflow-wrap: anywhere;
-    }
-
-    .unit {
-      margin-left: 5px;
-      color: #9aaabd;
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: 0;
-    }
-
-    .desc {
-      min-height: 42px;
-      margin: 12px 0 0;
-      color: #aab8c9;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .breezes {
-      position: relative;
-      height: 27px;
-      margin-top: 10px;
-      overflow: hidden;
-    }
-
-    .breeze {
-      position: absolute;
-      left: -45%;
-      width: 38%;
-      height: 1px;
-      border-radius: 10px;
-      background: linear-gradient(90deg, transparent, #a6c7df, transparent);
-      animation: breeze 5s linear infinite;
-    }
-
-    .breeze:nth-child(2) {
-      top: 10px;
-      width: 50%;
-      animation-delay: -1.7s;
-    }
-
-    .breeze:nth-child(3) {
-      top: 20px;
-      width: 25%;
-      animation-delay: -3.2s;
-    }
-
-    .breezes.slow .breeze { animation-duration: 8s; }
-    .breezes.normal .breeze { animation-duration: 5s; }
-    .breezes.fast .breeze { animation-duration: 2.5s; }
-
-    @keyframes breeze {
-      0% { left: -45%; opacity: 0; }
-      20% { opacity: .65; }
-      100% { left: 110%; opacity: 0; }
-    }
-
-    .footer {
-      padding: 30px 0 0;
-      text-align: center;
-      color: #8494a8;
-      font-size: 12px;
-      line-height: 1.7;
-    }
-
-    @media (max-width: 560px) {
-      main {
-        width: min(100% - 28px, 420px);
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-x: hidden;
       }
 
-      .aurora {
-        height: 175px;
-        margin-bottom: -25px;
+      .hero {
+        position: relative;
+        isolation: isolate;
+        min-height: 350px;
+        width: 100%;
+        flex-shrink: 0;
+        overflow: hidden;
       }
 
-      .heading {
-        padding-bottom: 30px;
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: -2%;
+        z-index: -2;
+        pointer-events: none;
+        background-image: var(--apodimg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          black 0%,
+          black 35%,
+          rgba(0, 0, 0, 0.8) 55%,
+          transparent 100%
+        );
+        mask-image: linear-gradient(
+          to bottom,
+          black 0%,
+          black 35%,
+          rgba(0, 0, 0, 0.8) 55%,
+          transparent 100%
+        );
+        animation: imgm 35s ease-in-out infinite alternate;
       }
 
-      .heading p {
-        font-size: 14px;
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0.35;
+        background-image:
+          radial-gradient(1px 1px at 10% 20%, white 99%, transparent),
+          radial-gradient(1.5px 1.5px at 75% 15%, #a0bef2 99%, transparent),
+          radial-gradient(1px 1px at 88% 45%, white 99%, transparent),
+          radial-gradient(2px 2px at 32% 38%, #a0bef2 99%, transparent),
+          radial-gradient(1px 1px at 60% 65%, white 99%, transparent),
+          radial-gradient(1px 1px at 45% 12%, white 99%, transparent);
+        background-size: 250px 220px;
+        animation: starm 15s linear infinite;
       }
 
-      .weather-grid {
-        grid-template-columns: 1fr;
-        gap: 11px;
+      .hero .content {
+        position: relative;
+        z-index: 2;
+        min-height: 350px;
+        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        animation: capp 1.2s ease both;
       }
 
-      .weather-card {
-        padding: 20px;
+      .hero .content h1 {
+        margin: 0;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 550;
+        color: #a0bef2;
+        font-size: clamp(25px, 10vw, 50px);
+        letter-spacing: -4px;
+        line-height: 1.2;
+        text-shadow:
+          0 0 15px rgba(160, 190, 242, 0.25),
+          0 0 45px rgba(100, 150, 255, 0.2);
+        animation: tgl 5s ease-in-out infinite alternate;
       }
 
-      .weather-card h2 {
-        margin-bottom: 15px;
+      .hero .content p {
+        margin-top: 18px;
+        font-family: "Redaction", sans-serif;
+        font-weight: 350;
+        color: rgba(160, 190, 242, 0.7);
+        font-size: clamp(15px, 3.5vw, 30px);
+        letter-spacing: 1px;
+        text-shadow: 0 0 20px rgba(160, 190, 242, 0.15);
       }
 
-      .desc {
-        min-height: auto;
+      .downarrowmain {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 150px;
+        margin-bottom: 250px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        opacity: 0.5;
+        border: 1px solid rgba(180, 220, 255, 0.8);
       }
-    }
 
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
+      section {
+        width: 100%;
+        padding: 40px 25px;
+        box-sizing: border-box;
       }
-    }
-  </style>
 
-  <script>
-    const d = {};
-
-    const base = "https://services.swpc.noaa.gov";
-
-    const urls = {
-      kp: base + "/json/planetary_k_index_1m.json",
-      aurora: base + "/json/ovation_aurora_latest.json",
-      wind: base + "/json/rtsw/rtsw_wind_1m.json",
-      solar: base + "/json/goes/primary/xrays-6-hour.json"
-    };
-
-    async function getData(type) {
-      try {
-        const res = await fetch(urls[type], { cache: "no-store" });
-
-        if (!res.ok) throw new Error("Request failed");
-
-        d[type] = await res.json();
-      } catch (e) {
-        console.error("Failed to load " + type, e);
-        d[type] = null;
+      .card {
+        width: 100%;
+        position: relative;
+        isolation: isolate;
+        max-width: 900px;
+        min-height: 300px;
+        margin: 0 auto;
+        padding: 30px;
+        box-sizing: border-box;
+        color: #e8eff0;
+        background-size: cover;
+        border-radius: 25px;
+        overflow: hidden;
+        background-position: center;
+        transition: border-color 0.5s, box-shadow 0.7s, transform 0.4s;
       }
-    }
+      
+      .card.weather {
+        background: linear-gradient(90deg, rgba(5, 15, 30, 0.9) 0%, rgba(5, 15, 30, 0.7) 50%, rgba(5, 15, 30, 0.3) 100%), url("/images/home/weather.webp");
+        border: 1.5px solid rgba(160, 190, 240, 0.3);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(100, 150, 255, .1), inset 0 0 40px rgba(100, 150, 255, 0.08);
+      }
 
-    function latest(data, keys) {
-      if (!Array.isArray(data)) return null;
+      .card:hover {
+        transform: translateY(-5px);
+      }
 
-      for (let i = data.length - 1; i >= 0; i--) {
-        const row = data[i];
+      .card.weather:hover {
+        border-color: rgba(160, 190, 240, 0.5);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5),  0 0 35px rgba(100, 150, 255, 0.3), inset 0 0 50px rgba(100, 150, 255, 0.15);
+      }
 
-        for (const key of keys) {
-          const value = Number(row[key]);
+      .card h2 {
+        margin: 0 0 25px;
+        font-size: 25px;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+        font-weight: 500;
+      }
 
-          if (
-            row[key] !== null &&
-            row[key] !== undefined &&
-            row[key] !== "" &&
-            Number.isFinite(value)
-          ) {
-            return {
-              value,
-              time: row.time_tag || row.time || null
-            };
-          }
+      .card.weather h2 {
+        color: #bfcfff;
+        text-shadow: 0 0 20px rgba(160, 190, 255, 0.5);
+      }
+
+      .card p {
+        max-width: 600px;
+        margin: 0;
+        font-family: 'Asap Sharp', sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      .card.weather p {
+        color: rgba(230, 240, 250, 0.9);
+        text-shadow: 0 2px 10px rgba(0, 0, 0, .8);
+      }
+
+      .card a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-family: "Redaction", sans-serif;
+        text-decoration: none;
+        position: absolute;
+        touch-action: none;
+        width: 30%;
+        bottom: 30px;
+        height: 40px;
+        font-size: 15px;
+        border-radius: 25px;
+      }
+
+      .card.weather a {
+        background: rgba(220, 230, 255, 0.9);
+        color: rgba(0, 0, 60, 0.9);
+      }
+
+      .lucide-arrow-down {
+        color: rgba(200, 240, 255, 0.8);
+        stroke-width: 1.2;
+        width: 30px;
+        height: 30px;
+      }
+
+      @keyframes imgm {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.07);
         }
       }
 
-      return null;
-    }
+      @keyframes starm {
+        from {
+          background-position: 0 0;
+        }
+        to {
+          background-position: 250px 220px;
+        }
+      }
 
-    function show(id, value) {
-      const el = document.getElementById(id);
-      if (el) el.textContent = value;
-    }
+      @keyframes capp {
+        from {
+          opacity: 0;
+          transform: translateY(25px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-    function setGlow(level) {
-      const colors = {
-        low: "#253e50",
-        medium: "#3c3655",
-        high: "#51383f"
+      @keyframes tgl {
+        from {
+          text-shadow:
+            0 0 15px rgba(160, 190, 242, 0.2),
+            0 0 35px rgba(100, 150, 255, 0.12);
+        }
+        to {
+          text-shadow:
+            0 0 22px rgba(160, 190, 242, 0.4),
+            0 0 55px rgba(100, 150, 255, 0.25);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .hero,
+        .hero .content {
+          min-height: 350px;
+        }
+
+        .hero .content h1 {
+          letter-spacing: -2px;
+        }
+
+        section {
+          padding: 25px 15px;
+        }
+
+        .card {
+          padding: 25px;
+          min-height: 30ppx;
+        }
+
+        .card h2 {
+          font-size: 20px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hero::before,
+        .hero::after,
+        .hero .content,
+        .hero .content h1 {
+          animation: none;
+        }
+      }
+    </style>
+
+    <script>
+      const d = {
+        apod: {
+          img: null,
+          desc: null,
+          title: null
+        }
       };
 
-      document.body.style.setProperty("--glow", colors[level]);
-    }
+      async function apod() {
+        try {
+          const res = await fetch("https://science.nasa.gov/wp-json/wp/v2/apod-basic");
 
-    function kp() {
-      const result = latest(d.kp, ["kp", "estimated_kp", "k_index"]);
+          if (!res.ok) {
+            alert("We couldn't get the info we need :(");
+            return;
+          }
 
-      if (!result) {
-        show("kp", "--");
-        show("kp-desc", "Earth's magnetic field isn't reporting right now.");
-        return 0;
+          const dat = await res.json();
+          console.log(dat);
+
+          const item = Array.isArray(dat) ? dat[0] : dat;
+
+          d.apod = {
+            title: item.title,
+            img: item.hdurl || item.url,
+            desc: item.explanation
+          };
+        } catch (e) {
+          console.log(e);
+          alert("Something went wrong!");
+        }
       }
 
-      const value = result.value;
-      show("kp", value.toFixed(1));
+      const apodl = apod();
 
-      if (value >= 7) {
-        show("kp-desc", "Boom xd");
-        return 2;
-      }
+      document.addEventListener("DOMContentLoaded", async () => {
+        await apodl;
 
-      if (value >= 5) {
-        show("kp-desc", "Looks like there's a storm! :0");
-        return 2;
-      }
-
-      if (value >= 4) {
-        show("kp-desc", "It's awake! (kinda normal)");
-        return 1;
-      }
-
-      if (value >= 2) {
-        show("kp-desc", "Not too badd.");
-        return 0;
-      }
-
-      show("kp-desc", "Maybe Earth's magnetic field is asleep :p");
-      return 0;
-    }
-
-    function wind() {
-      const result = latest(d.wind, ["wind_speed", "speed"]);
-
-      if (!result) {
-        show("wind", "--");
-        show("wind-desc", "Solar wind readings aren't available right now.");
-        document.getElementById("breezes").className = "breezes slow";
-        return 0;
-      }
-
-      const speed = result.value;
-      show("wind", Math.round(speed));
-
-      const breezes = document.getElementById("breezes");
-
-      if (speed >= 600) {
-        breezes.className = "breezes fast";
-        show("wind-desc", "Earth's getting blowm awayy");
-        return 2;
-      }
-
-      if (speed >= 400) {
-        breezes.className = "breezes normal";
-        show("wind-desc", "Looks normal to me :p");
-        return 1;
-      }
-
-      breezes.className = "breezes slow";
-      show("wind-desc", "Prettyy dry.");
-      return 0;
-    }
-
-    function aurora() {
-      const data = d.aurora;
-
-      if (!data || !Array.isArray(data.coordinates)) {
-        show("aurora", "--");
-        show("aurora-desc", "The aurora forecast isn't available right now.");
-        return;
-      }
-
-      const values = data.coordinates
-        .map(point => Number(point[2]))
-        .filter(value => Number.isFinite(value));
-
-      if (!values.length) {
-        show("aurora", "--");
-        show("aurora-desc", "No aurora readings are available right now.");
-        return;
-      }
-
-      const peak = Math.max(...values);
-
-      show("aurora", Math.round(peak));
-
-      if (peak >= 70) {
-        show("aurora-desc", "Woah, thats a lot! :0");
-      } else if (peak >= 50) {
-        show("aurora-desc", "Can you see ir?");
-      } else if (peak >= 20) {
-        show("aurora-desc", "You might see some Aurora!");
-      } else if (peak >= 5) {
-        show("aurora-desc", "Not too badd");
-      } else {
-        show("aurora-desc", "That's no fun");
-      }
-    }
-
-    function solar() {
-      const result = latest(d.solar, ["flux"]);
-
-      if (!result || result.value <= 0) {
-        show("solar", "--");
-        show("solar-desc", "Solar X-ray readings aren't available right now.");
-        return 0;
-      }
-
-      const flux = result.value;
-      let letter = "A";
-
-      if (flux >= 1e-4) letter = "X";
-      else if (flux >= 1e-5) letter = "M";
-      else if (flux >= 1e-6) letter = "C";
-      else if (flux >= 1e-7) letter = "B";
-
-      show("solar", letter + " " + flux.toExponential(1));
-
-      if (letter === "X") {
-        show("solar-desc", "That's high!");
-        return 2;
-      }
-
-      if (letter === "M") {
-        show("solar-desc", "Maybe the Sun's happy.");
-        return 2;
-      }
-
-      if (letter === "C") {
-        show("solar-desc", "That's normal!");
-        return 1;
-      }
-
-      if (letter === "B") {
-        show("solar-desc", "Nothing muchh");
-        return 0;
-      }
-
-      show("solar-desc", "The Sun might be off xd");
-      return 0;
-    }
-
-    async function update() {
-      await Promise.all(Object.keys(urls).map(getData));
-
-      const levels = [
-        kp(),
-        wind(),
-        solar()
-      ];
-
-      aurora();
-
-      setGlow(["low", "medium", "high"][Math.max(...levels)]);
-
-      show(
-        "updated",
-        "Last checked " +
-        new Date().toLocaleTimeString()
-      );
-    }
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      await update();
-      setInterval(update, 60000);
-    });
-  </script>
-</head>
-
-<body>
-  <main>
-    <div class="aurora">
-      <span></span>
-      <span></span>
-      <span></span>
+        if (d.apod.img) document.querySelector(".hero").style.setProperty("--apodimg", `url("${d.apod.img}")`);
+      });
+    </script>
+  </head>
+  <body>
+    <div class="hero">
+      <div class="content">
+        <h1>Cosmic</h1>
+        <p>See what's going on around you</p>
+      </div>
     </div>
-
-    <header class="heading">
-      <h1>Space Weather</h1>
-      <p>A little look at what's happening beyond Earth! :D</p>
-    </header>
-
-    <section class="weather-grid">
-      <article class="weather-card">
-        <h2>Geomagnetic activity</h2>
-        <div class="value" id="kp">--</div>
-        <p class="desc" id="kp-desc">Checking Earth's magnetic field...</p>
-      </article>
-
-      <article class="weather-card">
-        <h2>Solar wind</h2>
-        <div class="value">
-          <span id="wind">--</span><span class="unit">km/s</span>
+    <div class="downarrowmain">
+      <i data-lucide="arrow-down"></i>
+    </div>
+    <main>
+      <section id="weather">
+        <div class="card weather">
+          <h2>Weather</h2>
+          <p>See what's happening with the weather in outer space! It's pretty cool :D</p>
+          <a href="/weather">Let's Go!</a>
         </div>
-        <p class="desc" id="wind-desc">Checking solar wind...</p>
-        <div class="breezes slow" id="breezes">
-          <span class="breeze"></span>
-          <span class="breeze"></span>
-          <span class="breeze"></span>
-        </div>
-      </article>
-
-      <article class="weather-card">
-        <h2>Aurora activity</h2>
-        <div class="value">
-          <span id="aurora">--</span><span class="unit">%</span>
-        </div>
-        <p class="desc" id="aurora-desc">Checking aurora forecast...</p>
-      </article>
-
-      <article class="weather-card">
-        <h2>Solar X-ray activity</h2>
-        <div class="value" id="solar">--</div>
-        <p class="desc" id="solar-desc">Checking solar activity...</p>
-      </article>
-    </section>
-
-    <footer class="footer" id="updated">
-      Getting the readings...
-    </footer>
-  </main>
-</body>
+      </section>
+    </main>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
 </html>
