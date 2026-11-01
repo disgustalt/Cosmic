@@ -368,7 +368,7 @@
     }
 
     function wind() {
-      const result = latest(d.wind, ["wind_speed", "speed"]);
+      const result = latest(d.wind, ["proton_speed"]);
 
       if (!result) {
         show("wind", "--");
